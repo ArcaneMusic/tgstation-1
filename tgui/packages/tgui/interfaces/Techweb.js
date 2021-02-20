@@ -2,7 +2,7 @@ import { filter, map, sortBy } from 'common/collections';
 import { flow } from 'common/fp';
 import { useBackend, useLocalState } from '../backend';
 import { Button, Section, Modal, Dropdown, Tabs, Box, Input, Flex, ProgressBar, Collapsible, Icon, Divider } from '../components';
-import { Window } from '../layouts';
+import { Window, NtosWindow } from '../layouts';
 import { Experiment } from './ExperimentConfigure';
 
 // Data reshaping / ingestion (thanks stylemistake for the help, very cool!)
@@ -85,6 +85,58 @@ const abbreviateName = name => abbreviations[name] ?? name;
 export const Techweb = (props, context) => {
   const { act, data } = useRemappedBackend(context);
   const {
+    locked,
+  } = data;
+  return (
+    <Window
+      width={640}
+      height={735}>
+      <Window.Content scrollable>
+        {!!locked && (
+          <Modal width="15em" align="center" className="Techweb__LockedModal">
+            <div><b>Console Locked</b></div>
+            <Button
+              icon="unlock"
+              onClick={() => act("toggleLock")}>
+              Unlock
+            </Button>
+          </Modal>
+        )}
+        <TechwebContent />
+      </Window.Content>
+    </Window>
+  );
+};
+
+export const AppTechweb = (props, context) => {
+  const { act, data } = useRemappedBackend(context);
+  const {
+    locked,
+  } = data;
+  return (
+    <NtosWindow
+      width={640}
+      height={735}>
+      <NtosWindow.Content scrollable>
+        {!!locked && (
+          <Modal width="15em" align="center" className="Techweb__LockedModal">
+            <div><b>Console Locked</b></div>
+            <Button
+              icon="unlock"
+              onClick={() => act("toggleLock")}>
+              Unlock
+            </Button>
+          </Modal>
+        )}
+        <TechwebContent />
+      </NtosWindow.Content>
+    </NtosWindow>
+  );
+};
+
+export const TechwebContent = (props, context) => {
+  const { act, data } = useRemappedBackend(context);
+  const {
     points,
     points_last_tick,
     web_org,
@@ -103,21 +155,6 @@ export const Techweb = (props, context) => {
   ] = useLocalState(context, 'lastPoints', {});
 
   return (
-    <Window
-      title={`${web_org} Research and Development Network`}
-      width={640}
-      height={735}>
-      {!!locked && (
-        <Modal width="15em" align="center" className="Techweb__LockedModal">
-          <div><b>Console Locked</b></div>
-          <Button
-            icon="unlock"
-            onClick={() => act("toggleLock")}>
-            Unlock
-          </Button>
-        </Modal>
-      )}
-      <Window.Content>
         <Flex direction="column" className="Techweb__Viewport" height="100%">
           <Flex.Item className="Techweb__HeaderSection">
             <Flex className="Techweb__HeaderContent">
@@ -173,8 +210,6 @@ export const Techweb = (props, context) => {
             <TechwebRouter />
           </Flex.Item>
         </Flex>
-      </Window.Content>
-    </Window>
   );
 };
 
