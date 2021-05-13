@@ -661,3 +661,28 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 	name = "Mediborg's Festive Amputation Adventure"
 	desc = "A picture of a blood-soaked medical cyborg wearing a Santa hat flashes on the screen. The mediborg has a speech bubble that says, \"Put your hand in the machine if you aren't a <b>coward!</b>\""
 	prize_override = list(/obj/item/a_gift/anything = 1)
+
+/obj/machinery/computer/arcade/minesweeper
+	name = "Minesweep"
+	desc = "sweep sweep, janny."
+	icon_state = "arcade"
+	circuit = /obj/item/circuitboard/computer/arcade/amputation
+
+
+/obj/machinery/computer/arcade/minesweeper/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "Minesweep", name)
+		ui.open()
+
+/obj/machinery/computer/arcade/minesweeper/ui_data(mob/user)
+	var/list/data = list()
+
+	return data
+
+/obj/machinery/computer/arcade/minesweeper/ui_act(action,params)
+	. = ..()
+	if(.)
+		return
+
+	. = TRUE
